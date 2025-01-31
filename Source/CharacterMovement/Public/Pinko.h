@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/Character.h"
+#include "Inventory.h"
+#include "PlayerInteractionComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Pinko.generated.h"
 
@@ -31,6 +33,12 @@ protected:
 
 	UPROPERTY(editAnywhere, Category = Camera)
 	USpringArmComponent* SpringArm;
+
+	UPROPERTY(EditAnywhere, Category = Inventory)
+	UInventory* Inventory;
+
+	UPROPERTY(EditAnywhere, Category = Interaction)
+	UPlayerInteractionComponent* InteractionComponent;
 	
 	virtual void BeginPlay() override;
 
@@ -45,5 +53,6 @@ public:
 
 	void SetLookInput(const FVector2D& LookInput);
 
+	UPlayerInteractionComponent* GetInteracionComponent();
 };
 

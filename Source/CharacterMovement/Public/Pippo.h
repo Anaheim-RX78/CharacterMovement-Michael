@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "InputMap.h"
 #include "Pinko.h"
 #include "GameFramework/PlayerController.h"
 #include "Pippo.generated.h"
@@ -21,17 +22,8 @@ class CHARACTERMOVEMENT_API APippo : public APlayerController
 		UPROPERTY(visibleAnywhere)
 		APinko* Pinko;
 	
-		UPROPERTY(editAnywhere, BlueprintReadWrite, category= Input)
-		UInputMappingContext* DefaultMappingContext;
-
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, category= Input)
-		UInputAction* JumpAction;
-	
-		UPROPERTY(EditAnywhere, BlueprintReadWrite, category= Input)
-		UInputAction* MoveAction;
-	
-		UPROPERTY(EditAnywhere, BlueprintReadWrite, category= Input)
-		UInputAction* LookAction;
+		UInputMap* InputMap;
 
 		virtual void SetupInputComponent() override;
 
@@ -45,4 +37,7 @@ class CHARACTERMOVEMENT_API APippo : public APlayerController
 
 		UFUNCTION()
 		void Look(const FInputActionValue& Value);
+
+		UFUNCTION()
+		void OnInteract(const FInputActionValue& Value);
 };

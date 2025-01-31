@@ -16,15 +16,22 @@ void APippo::SetupInputComponent()
 
 	Subsystem->ClearAllMappings();
 
-	Subsystem->AddMappingContext(DefaultMappingContext,0);
+	if (!InputMap)
+	{
+		GEngine->AddOnScreenDebugMessage(-1,2,FColor::Red,TEXT("CONTROLLA CHE CI SIA L'INPUIT MAP"));
+	}
+
+	Subsystem->AddMappingContext(InputMap->Context,0);
 
 	UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent);
 
-	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &APippo::Jump);
+	EnhancedInputComponent->BindAction(InputMap->Actions["Jump"], ETriggerEvent::Started, this, &APippo::Jump);
 
-	EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APippo::Look);
+	EnhancedInputComponent->BindAction(InputMap->Actions["Look"], ETriggerEvent::Triggered, this, &APippo::Look);
 
-	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APippo::Move);
+	EnhancedInputComponent->BindAction(InputMap->Actions["Move"], ETriggerEvent::Triggered, this, &APippo::Move);
+
+	EnhancedInputComponent->BindAction(InputMap->Actions["Interact"], ETriggerEvent::Started, this, &APippo::OnInteract);
 }
 
 void APippo::OnPossess(APawn* InPawn)
@@ -46,4 +53,9 @@ void APippo::Move(const FInputActionValue& Value)
 void APippo::Look(const FInputActionValue& Value)
 {
 	Pinko->SetLookInput(Value.Get<FVector2d>());
+}
+
+void APippo::OnInteract(const FInputActionValue& Value)
+{
+	Pinko->GetInteracionComponent()->Interact();
 }
