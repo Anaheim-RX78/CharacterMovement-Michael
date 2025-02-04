@@ -7,65 +7,68 @@
 #include "Engine/GameInstance.h"
 #include "DropperGameInstance.generated.h"
 
-/**
- * Custom GameInstance for handling the scoring system.
- */
 UCLASS()
 class CHARACTERMOVEMENT_API UDropperGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 
 public:
-	// Constructor
+
 	UDropperGameInstance();
 
-	// Total score across all levels
+	// Variabile che contiene lo score finale
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
 	int TotalScore;
 
-	// Score for the current level
+	// variabile che contiene lo score del livello attualmente giocato
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
 	int CurrentLevelScore;
 
-	// Number of collected coins in the current level
+	// numero di monete collezzionate dal player
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
 	int CollectedCoins;
 
+	// array che conserva tutte le monete in scena per poterle resettare
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
 	TArray<ACoin*> CoinArray;
 
+	// implementazione non completa di un item che temporanemante aumenterebbe il valore delle monete collezionate
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
 	int CoinsValue = 1;
 
+	// FVector della posizione del checkpoint per resplawnare il player
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
 	FVector CheckpointLocation;
 
-	// How fast the score decays per second
+	// tasso di ricaduta dello score dal valore inziale di 10000
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
 	float ScoreDecayRate;
 
+	//impedisce allo score di scendere mentre si aspetta di superare la linea di partenza
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
 	bool ScoreFrozen=false;
 
-	// Initializes the level score and resets collected coins
+	// si assicura che lo score e le monete raccolte abbiamo valore default
 	UFUNCTION(BlueprintCallable, Category = "Score")
 	void StartLevel(int InitialScore);
 
-	// Decreases score over time
+	// funzione chiamata in tick per far scendere lo score overtime
 	UFUNCTION(BlueprintCallable, Category = "Score")
 	void UpdateScore(float DeltaTime);
 
+	// funzione che gestisce lo reset alla morte di alcune variabili
 	UFUNCTION(BlueprintCallable, Category = "Score")
 	void DyingLol(int InitialScore);
 
+	// funzione che cicla l'array di coins per resettarle
 	UFUNCTION(BlueprintCallable, Category = "Coins")
 	void ResetAllCoins();
 	
-	// Adds a coin to the collected count
+	// update delle coin raccolte
 	UFUNCTION(BlueprintCallable, Category = "Score")
 	void CollectCoin();
 
-	// Finalizes the level score and updates total score
+	// finalizza lo score del livello appena giocato e lo aggiunge allo score finale
 	UFUNCTION(BlueprintCallable, Category = "Score")
 	void FinishLevel();
 };

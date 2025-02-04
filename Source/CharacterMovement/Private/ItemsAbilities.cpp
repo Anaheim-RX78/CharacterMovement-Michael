@@ -34,6 +34,6 @@ void UItemsAbilities::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 
 void UItemsAbilities::ItemBoost()
 {
-	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Red,"PORCODIO");
+	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Red,"TEST");
 }
 

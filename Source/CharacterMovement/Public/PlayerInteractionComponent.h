@@ -17,20 +17,24 @@ public:
 
 protected:
 
+	// distanza massima interazione
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
 	float InteractionDistance = 1000.0f;
 
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
 	//FName InteractionProfile = "Interaction";
 
+	// channel custom per gestire questa interazione
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
 	TEnumAsByte<ECollisionChannel> InteractionChannel;
 
+	// componente per il character per gestire le interazioni
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Interaction")
 	UInteractableComponent* CurrentInteractable = nullptr;
 	
 	virtual void BeginPlay() override;
 
+	// funzione raytrace
 	void CheckInteractionRange();
 	
 public:	

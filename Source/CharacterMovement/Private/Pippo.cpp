@@ -25,6 +25,7 @@ void APippo::SetupInputComponent()
 
 	UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent);
 
+	// abbina le action del input map con la rispettiva funzione del controller "triggered" ha molteplici valori mentre "started" sono solo azioni "pressed" una singola volta
 	EnhancedInputComponent->BindAction(InputMap->Actions["Jump"], ETriggerEvent::Started, this, &APippo::Jump);
 
 	EnhancedInputComponent->BindAction(InputMap->Actions["Look"], ETriggerEvent::Triggered, this, &APippo::Look);
@@ -52,21 +53,25 @@ void APippo::OnPossess(APawn* InPawn)
 
 void APippo::Jump(const FInputActionValue& Value)
 {
+	// default funzione del chaarter in unreal
 	Pinko->Jump();
 }
 
 void APippo::Move(const FInputActionValue& Value)
 {
+	// vettore 2d di un forward e un right vector per muoversi
 	Pinko->SetMovementInput(Value.Get<FVector2d>());
 }
 
 void APippo::Look(const FInputActionValue& Value)
 {
+	// vettore con le coordinate del mouse
 	Pinko->SetLookInput(Value.Get<FVector2d>());
 }
 
 void APippo::OnInteract(const FInputActionValue& Value)
 {
+	// interagisce con l'interact component del actor che si sta guardando
 	Pinko->GetInteracionComponent()->Interact();
 }
 //on use richiama inventory->use
@@ -77,16 +82,19 @@ void APippo::OnUse(const FInputActionValue& Value)
 
 void APippo::ToggleSlowFall(const FInputActionValue& Value)
 {
+	// toggle del glider
 	Pinko->ToggleSlowFall();
 }
 
 void APippo::PreviousInventorySlot(const FInputActionValue& Value)
 {
+	// slot precedente
 	Pinko->Inventory->ScrollInventory(false);
 }
 
 void APippo::NextInventorySlot(const FInputActionValue& Value)
 {
+	// slot successivo
 	Pinko->Inventory->ScrollInventory(true);
 }
 

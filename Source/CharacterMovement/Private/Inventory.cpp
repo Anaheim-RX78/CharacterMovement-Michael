@@ -29,12 +29,14 @@ void UInventory::BeginPlay()
 
 void UInventory::AddItem(UInventoryItemData* Item, int Amount)
 {
+	// controlla se l'item è gia presente e in caso aumenta la quantità di questo oggetto
 	if (FInventorySlot* SlotPtr = GetSlotByData(Item))
 	{
 		SlotPtr->Amount += Amount;
 	}
 	else
 	{
+		// se invece non è presente allora salvaimo l'item in un nuovo indirizzo vuoto dell array
 		FInventorySlot Slot;
 		Slot.ItemData = Item;
 		Slot.Amount = Amount;
@@ -46,11 +48,13 @@ void UInventory::AddItem(UInventoryItemData* Item, int Amount)
 void UInventory::AddItem(AInventoryItemActor* Item, int Amount)
 {
 	AddItem(Item->ItemData, Amount);
+	// rimuove dalla scena l'item raccolto
 	Item->Destroy();
 }
 
 void UInventory::DropItem(UInventoryItemData* Item, int Amount, FVector Location)
 {
+	// droppa un amount del Item attualmente selezionato
 	for (int i = 0; i < Amount; i++)
 	{
 		GetWorld()->SpawnActor<AInventoryItemActor>(Item->Item, Location, FRotator::ZeroRotator);
@@ -60,6 +64,7 @@ void UInventory::DropItem(UInventoryItemData* Item, int Amount, FVector Location
 
 void UInventory::DropItem(int Amount, FVector Location)
 {
+	// si occupa di controllare se l'tem selezionato è droppabile e ne gestisce la nuova quantità
 	if (Items.Num() > 0 && Items.IsValidIndex(CurrentSelectedIndex))
 	{
 		DropItem(Items[CurrentSelectedIndex].ItemData, Amount, Location);
@@ -67,6 +72,7 @@ void UInventory::DropItem(int Amount, FVector Location)
         
 		if (Items[CurrentSelectedIndex].Amount <= 0)
 		{
+			// se amount 0 lo rimuove dall array
 			Items.RemoveAt(CurrentSelectedIndex);
 		}
 	}
@@ -92,20 +98,24 @@ FInventorySlot* UInventory::GetSlotByData(UInventoryItemData* Item)
 /////funzione richiama uso del inventoryItemData
 void UInventory::UseCurrentSlot()
 {
+	// richiama la funzione di uso item dopo essere stata chiamata essa dall imput "Use Item"
 	if (Items.Num() > 0 && Items.IsValidIndex(CurrentSelectedIndex) && Items[CurrentSelectedIndex].ItemData)
 	{
+		// crea degli indirizzi univici per il TMap prendendosi il valore dal data set dell item
 		FString ItemID = Items[CurrentSelectedIndex].ItemData->IdOggettoUsabile;
 
+		// se l'item non è presente nella "prigione" del cooldown o la sua sentenza ha raggiunto 0 entra qui
 		if (!Jail.Contains(ItemID) || Jail[ItemID] <= 0)
 		{
 			Items[CurrentSelectedIndex].ItemData->UseItem();
 			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, "Item Used!");
             
-			// Apply cooldown
+			// mette in prigione l'item per la value
 			Jail.Add(ItemID, 5.0f);
 		}
 		else
 		{
+			// item ancora in prigione (cooldown)
 			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, "Item on cooldown!");
 		}
 	}
@@ -120,6 +130,7 @@ void UInventory::UseCurrentSlot()
 void UInventory::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	// scontando la sentenza in prigione del cooldown
 	Jailed(DeltaTime);
 	// ...
 }
@@ -127,8 +138,7 @@ void UInventory::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompo
 void UInventory::ScrollInventory(bool bForward) //richiama vero per il prossimo slot e falso per il precedente
 {
 	if (Items.Num() == 0) return;
-    
-	// Update current index
+	
 	if (bForward)
 	{
 		CurrentSelectedIndex = (CurrentSelectedIndex + 1) % Items.Num();
@@ -138,7 +148,7 @@ void UInventory::ScrollInventory(bool bForward) //richiama vero per il prossimo 
 		CurrentSelectedIndex = (CurrentSelectedIndex - 1 + Items.Num()) % Items.Num();
 	}
     
-	// Get selected item data
+	// prende il nome del data asset dell item appena selezionato con il next e previous e lo stampa
 	if (Items.IsValidIndex(CurrentSelectedIndex))
 	{
 		UInventoryItemData* SelectedItem = Items[CurrentSelectedIndex].ItemData;
@@ -151,6 +161,7 @@ void UInventory::ScrollInventory(bool bForward) //richiama vero per il prossimo 
 }
 void UInventory::Jailed(float DeltaTime)
 {
+	// prigione del cooldown
 	TArray<FString> KeysToRemove;
 
 	for (TPair<FString, float>& Pair : Jail)
@@ -162,7 +173,7 @@ void UInventory::Jailed(float DeltaTime)
 		}
 	}
 
-	// Remove expired cooldowns
+	// se la sentenza è terminata il tmap viene ripulito
 	for (const FString& Key : KeysToRemove)
 	{
 		Jail.Remove(Key);

@@ -18,6 +18,7 @@ class CHARACTERMOVEMENT_API UInputMap : public UDataAsset
 	GENERATED_BODY()
 
 public:
+	// costruttore per il mapping context e le imput actions
 	UPROPERTY(editAnywhere, Category = Input)
 	UInputMappingContext* Context;
 

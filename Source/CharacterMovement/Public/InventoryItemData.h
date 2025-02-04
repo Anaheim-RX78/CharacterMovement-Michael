@@ -17,18 +17,20 @@ class CHARACTERMOVEMENT_API UInventoryItemData : public UDataAsset
 	GENERATED_BODY()
 
 public:
+	// nome "in bella" dell item
 	UPROPERTY(EditAnywhere,Category="ItemDetails")
 	FString PrettyName;
 
 	UPROPERTY(EditAnywhere,Category="ItemDetails")
 	FString Description;
-	
+	// non implementato 
 	UPROPERTY(EditAnywhere,Category="ItemDetails")
 	float Weight;
-	
+	// riferimento subclass all attore del quale questo data asset fa parte
 	UPROPERTY(EditAnywhere, Category = Item)
 	TSubclassOf<AInventoryItemActor> Item;
 
+	// ID univoco utilizzato per gestire i cooldown nella "jail" di inventory
 	UPROPERTY(EditAnywhere)
 	FString IdOggettoUsabile;
 	

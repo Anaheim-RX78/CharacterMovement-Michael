@@ -15,34 +15,37 @@ class CHARACTERMOVEMENT_API AObstaclePlatform : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AObstaclePlatform();
+	// mesh di default
 	UPROPERTY(EditAnywhere, Category = "components")
 	UStaticMeshComponent* MeshComponent;
 
+	// FVector per la posizione di respawn quando il character collide con questo attore e "muore"
 	UPROPERTY(EditAnywhere)
 	FVector PlayerRespawnLocation;
 
 	UPROPERTY(VisibleAnywhere)
-	float Time = 0;
+	float Time = 0; // codice reciclato dal progetto ostacoli
 
 	UPROPERTY(EditAnywhere)
-	bool ShouldMove = false;
+	bool ShouldMove = false; // implementazione pigra del codice riciclato per non impostare la initial position
 	
 	UPROPERTY(EditAnywhere)
-	FVector InitialPosition;
+	FVector InitialPosition; // punto A del movimento dell attore
 
 	UPROPERTY(EditAnywhere)
-	FVector TargetPosition;
+	FVector TargetPosition; // punto B
 
 	UPROPERTY(EditAnywhere)
-	FVector TotalMovement;
+	FVector TotalMovement; // puoi specificare la distanza unità senza avere un punto B (viene calcolato usando questa variabile)
 
 	UPROPERTY(EditAnywhere)
-	float Speed = 1;
+	float Speed = 1; // velocità del movimento sinuidale
 	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	
+
+	// standard implementazione di overlap con la mesh
 	UFUNCTION()
 	virtual void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 public:	

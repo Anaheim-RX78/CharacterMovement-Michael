@@ -26,8 +26,8 @@ APinko::APinko()
 	InteractionComponent->SetupAttachment(Camera);
 
 	GliderMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("GliderMesh"));
-	GliderMesh->SetupAttachment(RootComponent); // Attach to character
-	GliderMesh->SetVisibility(false); // Hide it by default
+	GliderMesh->SetupAttachment(RootComponent); 
+	GliderMesh->SetVisibility(false); // nascosto di default
 
 	
 }
@@ -35,19 +35,21 @@ APinko::APinko()
 void APinko::BeginPlay()
 {
 	Super::BeginPlay();
+	// inizializza lo score facendo un cast alla game instance e chiamando start level
 	UGameInstance* Instance = UGameplayStatics::GetGameInstance(GetWorld());
 	UDropperGameInstance* DropperInstance = Cast<UDropperGameInstance>(Instance);
 
 	if (DropperInstance)
 	{
 		DropperInstance->StartLevel(10000);
+		// il primo checkpoint è il punto di spawn in play
 		DropperInstance->CheckpointLocation = GetActorLocation();
 	}
 	else
 	{
 			UE_LOG(LogTemp,Warning,TEXT("No game instance found"));
 	}
-	///GESTIONE VELOCITA DI CADUTA
+	// controllo ridondante per avere la gravità e l'air control desiderato di defualt
 	GetCharacterMovement()->GravityScale = FallingSpeedGravity;
 	GetCharacterMovement()->AirControl = ReducedAirControl;
 }
@@ -58,31 +60,24 @@ void APinko::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	float FallSpeed = GetVelocity().Z;
 
-	// Check if the character is falling (negative Z velocity)
+	// funzione nativa di unreal che controlla se Z è negativa
 	if (GetCharacterMovement()->IsFalling())
 	{
-		// Print the fall speed on screen
+		// spedometro?
 		if (GEngine)
 		{
-			GEngine->AddOnScreenDebugMessage(
-				-1, // Message ID (-1 = always add new)
-				0.1f, // Duration (how long the message stays on screen)
-				FColor::Red, // Color of text
-				FString::Printf(TEXT("Falling Speed: %.2f"), FallSpeed) // Formatted string
-			);
+			GEngine->AddOnScreenDebugMessage(-1,0.1f,FColor::Red,FString::Printf(TEXT("Falling Speed: %.2f"), FallSpeed));
 		}
-
-		// Print the fall speed in the Output Log
 		UE_LOG(LogTemp, Warning, TEXT("Falling Speed: %.2f"), FallSpeed);
 	}
 
 	if (GEngine)
 	{
-		FString DebugMessage = FString::Printf(TEXT("Gravity: %.2f | Air Control: %.2f"),
-											   GetCharacterMovement()->GravityScale,
-											   GetCharacterMovement()->AirControl);
+		// mostra la gravity scale e l'air control attuale
+		FString DebugMessage = FString::Printf(TEXT("Gravity: %.2f | Air Control: %.2f"),GetCharacterMovement()->GravityScale,GetCharacterMovement()->AirControl);
 		GEngine->AddOnScreenDebugMessage(1, 0.1f, FColor::Cyan, DebugMessage);
 	}
+	// cast alla game instance per accedere allo score update
 	UGameInstance* Instance = UGameplayStatics::GetGameInstance(GetWorld());
 	UDropperGameInstance* DropperInstance = Cast<UDropperGameInstance>(Instance);
 	if (DropperInstance)
@@ -91,7 +86,7 @@ void APinko::Tick(float DeltaTime)
 	}
 }
 
-// Called to bind functionality to input
+
 void APinko::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -110,18 +105,19 @@ void APinko::SetLookInput(const FVector2D& LookInput)
 	AddControllerPitchInput(LookInput.Y);
 }
 
+// toggle del glider e gravità/air control
 void APinko::ToggleSlowFall()
 {
-	// Check if the character is on the ground, do nothing if on the ground
+	
 	if (!GetCharacterMovement()->IsFalling()) 
 	{
-		// Character is on the ground, return without applying slow fall
+		// stops the palyer from changing gravity on foot
 		return;
 	}
 
 	if (IsSlowFalling)
 	{
-		// Reset to normal fall speed and air control
+		// se siamo in slow fall ci dobbiamo uscire
 		GetCharacterMovement()->GravityScale = FallingSpeedGravity;
 		GetCharacterMovement()->AirControl = ReducedAirControl;
 		IsSlowFalling = false;
@@ -129,16 +125,16 @@ void APinko::ToggleSlowFall()
 	}
 	else
 	{
-		// Apply slow fall settings and reduced air control
+		// e viceversa
 		GetCharacterMovement()->GravityScale = FallingSpeedReducedGravity;
 		GetCharacterMovement()->AirControl = AirControl;
 
-		// Apply Updraft force (only when in the air)
+		// direzione della spinta verticale per rallentare
 		FVector UpdraftDirection = FVector(0, 0, 1);
 		FVector UpdraftForceVec = UpdraftDirection * UpdraftForce;
 		GliderMesh->SetVisibility(true);
         
-		// Launch with the updraft force (but only when in the air)
+		// spinta verticale
 		if (GetCharacterMovement()->IsFalling())
 		{
 			GetCharacterMovement()->Launch(FVector(0, 0, UpdraftForceVec.Z));
@@ -158,8 +154,10 @@ void APinko::ForwardBoost()
 }
 
 
+// funzione nativa del character che controlal un hit con una superfice sotto il character
 void APinko::Landed(const FHitResult& Hit)
 {
+	// resetta tutto al default "a piedi" quando si atterra
 	Super::Landed(Hit);
 	IsSlowFalling = true;
 	ToggleSlowFall();

@@ -12,10 +12,10 @@ class CHARACTERMOVEMENT_API ACoin : public AActor
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
+
 	ACoin();
 	UPROPERTY(EditAnywhere)
-	UStaticMeshComponent* MeshComponent;
+	UStaticMeshComponent* MeshComponent; //mesh di default per tutte le monete
 
 protected:
 	// Called when the game starts or when spawned
@@ -27,8 +27,11 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION()
+
+	//funzione che controlla se l'attore è in overlap con un altro attore.
 	virtual void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
+	//funzione per respawnare le con in scena dopo che si muore
 	void ResetCoins();
 };

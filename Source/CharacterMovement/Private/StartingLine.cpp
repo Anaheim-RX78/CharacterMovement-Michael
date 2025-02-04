@@ -13,6 +13,7 @@ AStartingLine::AStartingLine()
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	MeshComponent->SetupAttachment(RootComponent);
 
+	// abilita la mesh a creare eventi overlap
 	MeshComponent->OnComponentBeginOverlap.AddDynamic(this, &AStartingLine::OnOverlapBegin);
 }
 
@@ -23,12 +24,14 @@ void AStartingLine::BeginPlay()
 	
 }
 
+// evento overlap
 void AStartingLine::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	// cast al character se è laltro membro d questo evento overlap
 	if (ACharacter* PlayerCharacter = Cast<ACharacter>(OtherActor))
 	{
-		// Get Game Instance and cast it
+		// cast alla game instance per richiamare start level
 		UDropperGameInstance* GameInstance = Cast<UDropperGameInstance>(GetGameInstance());
 
 		if (GameInstance) 

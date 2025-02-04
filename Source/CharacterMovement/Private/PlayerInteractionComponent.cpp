@@ -17,6 +17,7 @@ void UPlayerInteractionComponent::CheckInteractionRange()
 {
 	FHitResult HitResult;
 
+	// ray cast singolo per cercare un attore con il componente interactable
 	GetWorld()->LineTraceSingleByChannel(HitResult, GetComponentLocation(), GetComponentLocation() + (GetForwardVector() * InteractionDistance), InteractionChannel);
 	
 	//GetWorld()->LineTraceSingleByProfile(HitResult, GetComponentLocation(), GetForwardVector() * InteractionDistance, InteractionProfile);

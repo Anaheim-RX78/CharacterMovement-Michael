@@ -16,10 +16,11 @@ class CHARACTERMOVEMENT_API AInventoryItemActor : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AInventoryItemActor();
-
+	// componente non implementato , dovrebbe fare da tramite per attivare le on use fuori dal data asset
 	UPROPERTY(EditAnywhere, Category = Abilities)
 	UItemsAbilities* AbilitiesComponent;
-	
+
+	// riferimento al data di questo attore item
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category="Item")
 	class UInventoryItemData* ItemData;
 	
@@ -31,5 +32,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	// self explanatory
 	virtual void OnUse();
 };

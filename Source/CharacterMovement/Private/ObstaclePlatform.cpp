@@ -10,36 +10,41 @@
 // Sets default values
 AObstaclePlatform::AObstaclePlatform()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+ 
 	PrimaryActorTick.bCanEverTick = true;
 
+	// mesh come root componente e avilitato agli eventi di overlap
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	MeshComponent->SetupAttachment(RootComponent);
 
 	MeshComponent->OnComponentBeginOverlap.AddDynamic(this, &AObstaclePlatform::OnOverlapBegin);
 }
 
-// Called when the game starts or when spawned
+
 void AObstaclePlatform::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
+// evento di overlap 
 void AObstaclePlatform::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	//GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Red,"Ostacolo Colpito");
+
+	// controlla se l'attore sta overlappando il player
 	if (ACharacter* PlayerCharacter = Cast<ACharacter>(OtherActor))
 	{
-		// Get Game Instance and cast it
+		// cast alla game instance
 		UDropperGameInstance* GameInstance = Cast<UDropperGameInstance>(GetGameInstance());
 
 		if (GameInstance) 
 		{
-			// Get the stored respawn location
+			// setta il respawn del character prendendo dalla game instance l'ultimo checkpoint
 			PlayerRespawnLocation = GameInstance->CheckpointLocation;
 			PlayerCharacter->SetActorLocation(PlayerRespawnLocation);
+			// richiama la funzione che si occupa di resettare lo score e le monete in caso di respawn
 			GameInstance->DyingLol(10000);
 		}
 	}
@@ -48,6 +53,7 @@ void AObstaclePlatform::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent,
 // Called every frame
 void AObstaclePlatform::Tick(float DeltaTime)
 {
+	// se deve muoversi qui cè il movimento sinuidale
 	if (ShouldMove)
 	{
 		Super::Tick(DeltaTime);

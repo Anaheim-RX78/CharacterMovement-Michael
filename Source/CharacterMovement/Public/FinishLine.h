@@ -12,22 +12,22 @@ class CHARACTERMOVEMENT_API AFinishLine : public AActor
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
 	AFinishLine();
 
+	// creazione di una mesh per eventi voerlap
 	UPROPERTY(EditAnywhere, Category = "components")
 	UStaticMeshComponent* MeshComponent;
 
+	// variabile che contiene la destinazione del teletrasporto a fine livello per passare al prossimo
 	UPROPERTY(EditAnywhere)
 	FVector NextCheckpoint;
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	// evento overlap
 	UFUNCTION()
 	virtual void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 public:
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 };

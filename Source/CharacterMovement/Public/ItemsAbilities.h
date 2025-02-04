@@ -11,7 +11,7 @@ UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class CHARACTERMOVEMENT_API UItemsAbilities : public UActorComponent
 {
 	GENERATED_BODY()
-
+// implementazione mancante di un sistema per chiamare gli use item al di fuori dei data asset
 public:	
 	// Sets default values for this component's properties
 	UItemsAbilities();

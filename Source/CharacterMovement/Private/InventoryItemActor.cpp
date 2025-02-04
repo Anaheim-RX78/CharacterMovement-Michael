@@ -8,7 +8,7 @@ AInventoryItemActor::AInventoryItemActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+ // default suboject del component degli use non implementato
 	AbilitiesComponent = CreateDefaultSubobject<UItemsAbilities>(TEXT("Abilities"));
 }
 
