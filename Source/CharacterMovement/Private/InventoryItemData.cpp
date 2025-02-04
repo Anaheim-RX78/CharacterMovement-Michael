@@ -3,3 +3,7 @@
 
 #include "InventoryItemData.h"
 
+void UInventoryItemData::UseItem()
+{
+	//
+}

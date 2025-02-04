@@ -3,8 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ItemsAbilities.h"
 #include "GameFramework/Actor.h"
 #include "InventoryItemActor.generated.h"
+
 
 UCLASS()
 class CHARACTERMOVEMENT_API AInventoryItemActor : public AActor
@@ -15,7 +17,10 @@ public:
 	// Sets default values for this actor's properties
 	AInventoryItemActor();
 
-	UPROPERTY(EditAnywhere,Category="Item")
+	UPROPERTY(EditAnywhere, Category = Abilities)
+	UItemsAbilities* AbilitiesComponent;
+	
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category="Item")
 	class UInventoryItemData* ItemData;
 	
 protected:
@@ -26,4 +31,5 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	virtual void OnUse();
 };

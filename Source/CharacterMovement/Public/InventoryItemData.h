@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ItemsAbilities.h"
 #include "Engine/DataAsset.h"
 #include "InventoryItemData.generated.h"
 
@@ -27,4 +28,12 @@ public:
 	
 	UPROPERTY(EditAnywhere, Category = Item)
 	TSubclassOf<AInventoryItemActor> Item;
+
+	UPROPERTY(EditAnywhere)
+	FString IdOggettoUsabile;
+	
+
+	//funzione di USO vuote in override
+	UFUNCTION()
+	virtual void UseItem();
 };

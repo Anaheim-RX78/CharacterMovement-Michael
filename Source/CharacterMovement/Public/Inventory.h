@@ -30,6 +30,9 @@ public:
 protected:
 	UPROPERTY(EditAnywhere, Category=Inventory)
 	TArray<FInventorySlot> Items;
+
+	UPROPERTY(visibleAnywhere, Category=Inventory)
+	int CurrentSelectedIndex = 0;
 	
 	virtual void BeginPlay() override;
 
@@ -41,11 +44,19 @@ public:
 
 	void DropItem(UInventoryItemData* Item, int Amount, FVector Location);
 
-	void DropItem(int Index, int Amount, FVector Location);
+	void DropItem(int Amount, FVector Location);
 
 	FInventorySlot* GetSlotByData(UInventoryItemData* Item);
+
+	UPROPERTY(EditAnywhere,category="Item")
+	TMap<FString,float> Jail;
 	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-		
+	void ScrollInventory (bool bFoward);
+
+	void Jailed(float Deltatime);
+	
+	//funzione che recupera l'item selezionato nell inventario e richiama la suo funzione di uso
+	void UseCurrentSlot();
 };

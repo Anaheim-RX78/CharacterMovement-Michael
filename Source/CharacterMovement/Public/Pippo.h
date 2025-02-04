@@ -40,4 +40,20 @@ class CHARACTERMOVEMENT_API APippo : public APlayerController
 
 		UFUNCTION()
 		void OnInteract(const FInputActionValue& Value);
+
+		UFUNCTION()
+		void OnUse(const FInputActionValue& Value);
+	//on use
+		UFUNCTION()
+		void ToggleSlowFall (const FInputActionValue& Value);
+
+		UFUNCTION()
+		void PreviousInventorySlot (const FInputActionValue& Value);
+
+		UFUNCTION()
+		void NextInventorySlot (const FInputActionValue& Value);
+
+		UFUNCTION()
+		void DropItem (const FInputActionValue& Value);
+		
 };

@@ -18,15 +18,36 @@ class CHARACTERMOVEMENT_API APinko : public ACharacter
 public:
 	// Sets default values for this character's properties
 	APinko();
+	
+	UPROPERTY(EditAnywhere,category = Movement)
+	bool IsSlowFalling = false;
+
+	UPROPERTY(VisibleAnywhere, Category = "Glider")
+	UStaticMeshComponent* GliderMesh;
 
 protected:
 	// Called when the game starts or when spawned
 
 	UPROPERTY(EditAnywhere, Category = Movement)
 	float Speed = 100.0f;
+	
+	UPROPERTY(EditAnywhere,category = Movement)
+	float FallingSpeedGravity = 1.5f;
+
+	UPROPERTY(EditAnywhere,category = Movement)
+	float FallingSpeedReducedGravity = 0.05f;
+
+	UPROPERTY(EditAnywhere,category = Movement)
+	float AirControl = 1.0f;
+
+	UPROPERTY(EditAnywhere,category = Movement)
+	float ReducedAirControl = 0.1f;
+	
+	UPROPERTY(EditAnywhere, Category = Movement)
+	float JumpForce = 300.0f;
 
 	UPROPERTY(EditAnywhere, Category = Movement)
-	float JumpForce = 100.0f;
+	float UpdraftForce = 1.0f;
 
 	UPROPERTY(VisibleAnywhere, Category = Camera)
 	UCameraComponent* Camera;
@@ -34,15 +55,17 @@ protected:
 	UPROPERTY(editAnywhere, Category = Camera)
 	USpringArmComponent* SpringArm;
 
-	UPROPERTY(EditAnywhere, Category = Inventory)
-	UInventory* Inventory;
-
 	UPROPERTY(EditAnywhere, Category = Interaction)
 	UPlayerInteractionComponent* InteractionComponent;
+
+	
 	
 	virtual void BeginPlay() override;
 
-public:	
+public:
+
+	UPROPERTY(EditAnywhere, Category = Inventory)
+	UInventory* Inventory;
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -52,6 +75,12 @@ public:
 	void SetMovementInput(const FVector2D& MovementInput);
 
 	void SetLookInput(const FVector2D& LookInput);
+
+	void ToggleSlowFall();
+
+	virtual void Landed(const FHitResult& Hit) override;
+
+	void ForwardBoost();
 
 	UPlayerInteractionComponent* GetInteracionComponent();
 };

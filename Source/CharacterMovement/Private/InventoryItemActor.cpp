@@ -9,6 +9,7 @@ AInventoryItemActor::AInventoryItemActor()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	AbilitiesComponent = CreateDefaultSubobject<UItemsAbilities>(TEXT("Abilities"));
 }
 
 // Called when the game starts or when spawned
@@ -23,5 +24,10 @@ void AInventoryItemActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AInventoryItemActor::OnUse()
+{
+	
 }
 

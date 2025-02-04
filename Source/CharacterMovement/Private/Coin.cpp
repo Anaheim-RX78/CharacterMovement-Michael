@@ -24,7 +24,11 @@ ACoin::ACoin()
 void ACoin::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	MeshComponent->SetVisibility(true);
+	if (UDropperGameInstance* GameInstance = Cast<UDropperGameInstance>(GetGameInstance()))
+	{
+		GameInstance->CoinArray.Add(this);
+	}
 }
 
 // Called every frame
@@ -43,11 +47,21 @@ void ACoin::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* Oth
 		UDropperGameInstance* GameInstance = Cast<UDropperGameInstance>(GetGameInstance());
 		if (GameInstance)
 		{
-			GameInstance->ScoreCollected+=100;
-			UE_LOG(LogTemp, Warning, TEXT("Score: %d"), GameInstance->ScoreCollected);
-			//Destroy();
+			GameInstance->CollectedCoins+=1;
+			UE_LOG(LogTemp, Warning, TEXT("Score: %d"), GameInstance->CollectedCoins);
+			MeshComponent->SetVisibility(false);
+			MeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			SetActorEnableCollision(false);
 		}
 	}
+}
+
+void ACoin::ResetCoins()
+{
+	SetActorHiddenInGame(false);
+	SetActorEnableCollision(true);
+	MeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	MeshComponent->SetVisibility(true);
 }
 
 

@@ -25,7 +25,7 @@ void UPlayerInteractionComponent::CheckInteractionRange()
 
 	if (HitActor == nullptr)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 0.1f, FColor::Emerald, TEXT(" No Interactable Found"));
+		//GEngine->AddOnScreenDebugMessage(-1, 0.1f, FColor::Emerald, TEXT(" No Interactable Found"));
 		CurrentInteractable = nullptr;
 		return;
 	}
@@ -34,12 +34,12 @@ void UPlayerInteractionComponent::CheckInteractionRange()
 
 	if (CurrentInteractable == nullptr && Component)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Emerald, TEXT("Interactable Found"));
+		//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Emerald, TEXT("Interactable Found"));
 		CurrentInteractable = Component;
 	}
 	else if (CurrentInteractable && Component && Component != CurrentInteractable)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Emerald, TEXT("Interactable Replaced"));
+		//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Emerald, TEXT("Interactable Replaced"));
 		CurrentInteractable = Component;
 	}
 }
